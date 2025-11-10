@@ -52,7 +52,7 @@ email-agent/
 4. Add redirect URI:
 
    ```
-   http://localhost:5000/auth/callback
+   {{url}}/auth/callback
    ```
 5. Download the `credentials.json` file and place it in your project root.
 
