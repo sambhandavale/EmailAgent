@@ -1,0 +1,30 @@
+{
+  "name": "emailagent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "node build/index.js",
+    "dev": "nodemon --watch \"src/**/*.ts\" --exec \"npx ts-node\" src/index.ts",
+    "build": "tsc --build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^5.0.5",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.10.0",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@types/mongodb": "^4.0.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "googleapis": "^165.0.0",
+    "mongodb": "^7.0.0",
+    "morgan": "^1.10.1"
+  }
+}
