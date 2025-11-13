@@ -1,117 +1,112 @@
-# 📧 Email Agent
+# **Email Agent Service**
 
-An intelligent **Email Agent** that connects to Gmail using the Google API, fetches emails, and enables sending new ones.
-This is the base module for a larger multi-agent automation system (including calendar, scheduling, and summarization agents).
-
----
-
-## 🚀 Features
-
-* 🔐 Secure Google OAuth2 authentication
-* 📥 Fetch emails from Gmail using the Gmail API
-* 📤 Send new emails via authenticated Gmail accounts
-* 🧩 Modular design — supports both **TypeScript** and **Python** versions
-* ⚙️ Ready to extend for:
-
-  * Email classification (priority, intent detection, etc.)
-  * Meeting scheduling
-  * AI-based summarization and response automation
+A modular **TypeScript + Node.js Email Agent** that automates Gmail operations for multiple users. Supports **reactive** (on-demand) and **proactive** (scheduled) email workflows, making it ideal for applications like Broker Copilot to streamline client communications.
 
 ---
 
-## 🏗️ Project Structure
+## **Features**
+
+* Send emails on-demand or scheduled via Gmail API.
+* Read inbox messages and analyze emails automatically.
+* Watch inbox with Gmail Pub/Sub for real-time events.
+* Multi-user support with OAuth 2.0.
+* Scheduled workflows for automated reminders, status updates, or reports.
+* Centralized logging, error handling, and secure APIs.
+* Modular structure for easy addition of Outlook, IMAP, or other services.
+
+---
+
+## **Architecture**
 
 ```
-email-agent/
-├── ts-version/
-│   ├── src/
-│   │   ├── index.ts
-│   │   ├── db.ts
-│   │   ├── routes.ts
-│   │   ├── utils.ts
-│   │   ├── daemon.ts
-│   │   ├── types.ts
-│   │ 
-│   ├── package.json
-│   └── README.md
+src/
 │
-├── python-version/             # Python version
-│
-└── README.md
+├── core/             # DB, OAuth, scheduler, logger, config
+├── models/           # User, Workflow, EmailLog schemas
+├── services/         # Gmail, Auth, Workflow services
+├── controllers/      # API logic for Gmail & workflows
+├── routes/           # Modular Express routes
+├── middlewares/      # Auth, validation, error handling
+├── types/            # Shared TS types/interfaces
+└── index.ts          # App entry point
 ```
+
+* **Proactive workflows:** Scheduler polls the DB and executes pending workflows automatically.
+* **Reactive APIs:** Other apps can call `/api/gmail` endpoints for immediate actions.
 
 ---
 
-## ⚙️ Setup
+## **Getting Started**
 
-### 1️⃣ Create Google Cloud Credentials
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/).
-2. Create a new project and enable the **Gmail API**.
-3. Create **OAuth 2.0 credentials** → `Web application`.
-4. Add redirect URI:
-
-   ```
-   {{url}}/auth/callback
-   ```
-5. Download the `credentials.json` file and place it in your project root.
-
----
-
-### 2️⃣ Environment Variables
-
-Create a `.env` file in both versions with:
-
-```
-GOOGLE_CLIENT_ID=your_client_id
-GOOGLE_CLIENT_SECRET=your_client_secret
-REDIRECT_URI=http://localhost:5000/auth/callback
-REFRESH_TOKEN=your_refresh_token
-PORT=5000
-```
-
----
-
-### 3️⃣ Run
-
-#### 🟦 TypeScript version
+1. Clone the repo:
 
 ```bash
-cd ts-version
+git clone https://github.com/yourusername/email-agent.git
+cd email-agent
 npm install
-npm run dev
 ```
 
-#### 🐍 Python version
+2. Create a `.env` file:
+
+```env
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/email-agent
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_REDIRECT_URI=http://localhost:5000/oauth2callback
+GMAIL_PUBSUB_TOPIC=projects/your-project/topics/email
+JWT_SECRET=your-secret-key
+```
+
+3. Run the server:
 
 ```bash
-cd python-version
-pip install -r requirements.txt
-python app.py
+npm run build
+npm start
 ```
 
----
-
-## 🧠 How It Works
-
-1. User authenticates using **Google OAuth2**.
-2. The agent retrieves a secure access token.
-3. It uses Gmail API to:
-
-   * Fetch messages from the inbox.
-   * Send outgoing emails on behalf of the user.
-4. Future modules will add:
-
-   * AI classification for prioritizing emails.
-   * Calendar and task synchronization.
-   * Automated email summarization and response suggestions.
+Server runs on `http://localhost:5000`. Scheduler starts automatically.
 
 ---
 
-## 📌 Roadmap
+## **API Endpoints**
 
-* [ ] Add email priority classification (AI/NLP based)
-* [ ] Integrate Google Calendar Agent
-* [ ] Add Notion task creation
-* [ ] Add meeting summarization (transcript → summary → tasks)
+### Gmail
+
+* **POST** `/api/gmail`
+  Body: `{ action: "send" | "read" | "watch", data: {...} }`
+
+**Example: Send Email**
+
+```json
+{
+  "action": "send",
+  "data": {
+    "userId": "user123",
+    "to": "client@example.com",
+    "subject": "Policy Renewal",
+    "body": "Your policy is expiring soon."
+  }
+}
+```
+
+### Workflow
+
+* **POST** `/api/workflow/run`
+  Manually trigger all pending workflows.
+
+---
+
+## **Use Case Example**
+
+* **Broker Copilot:** Automatically sends policy renewal reminders, tracks client responses, and updates workflow status. Scheduler executes workflows every 2 minutes, ensuring **proactive email automation**.
+
+---
+
+## **Why Use This Agent**
+
+* Fully **modular & extendable** for multiple email providers.
+* Supports **multi-user automation**.
+* Handles both **reactive API calls** and **proactive scheduled workflows**.
+* **Centralized logging and error handling** for production readiness.
 
